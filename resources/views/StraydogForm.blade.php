@@ -57,7 +57,14 @@
                             <label for="gender" class="col-md-4 col-form-label text-md-right">{{ __('gender') }}</label>
 
                             <div class="col-md-6">
-                                <input id="gender" type="text" class="form-control" name="gender" required autocomplete="new-password">
+                            <select class="form-control" id="gender" name="gender">
+                            @foreach ($gender as $genders)
+                                <option value="{{ $genders->id }}">{{ $genders->gender_name }}</option>
+                               
+                             
+                            @endforeach
+                            </select>
+                               
                             </div>
                         </div>
                         <div class="form-group row">

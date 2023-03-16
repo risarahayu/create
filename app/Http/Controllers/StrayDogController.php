@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\StrayDog;
+use App\gender;
 use Illuminate\Http\Request;
 
 class StrayDogController extends Controller
@@ -14,7 +15,8 @@ class StrayDogController extends Controller
      */
     public function index()
     {
-        return view('StrayDogForm');
+        $gender = gender::all();
+        return view('StrayDogForm', compact('gender'));
     }
 
     /**
@@ -84,4 +86,5 @@ class StrayDogController extends Controller
     {
         //
     }
+    
 }
