@@ -37,9 +37,46 @@ class StrayDogController extends Controller
      */
     public function store(Request $request)
     {
-        
-        StrayDog::create($request->all());
-        dd($request);
+        // dd($request->file('image'));
+        // $request->file('image')->store('dog-image');
+        // StrayDog::create($request->all());
+        // dd($request->all());
+         
+            //  $data = new StrayDog;
+            //  $data ->  animalType = $request->animalType;
+            //  $data ->  color = $request->color;
+            //  $data ->  temprament = $request->temprament ;
+            //  $data ->  gender = $request->gender;
+            //  $data ->  size = $request->size;
+            //  $data ->  description = $request->description;
+            //  $data -> save();
+
+
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                foreach ($image as $files) {
+                    // $destinationPath = 'public/storage/dog-image';
+                    $destinationPath = $files -> store('dog-image');
+                    $file_name = time() . "." . $files->getClientOriginalExtension();
+                    $files->move($destinationPath, $file_name);
+                    $data[] = $file_name;
+                }
+            }
+            $file= new StrayDog();
+            $file->image=json_encode($data);
+             $file ->  animalType = $request->animalType;
+             $file ->  color = $request->color;
+             $file ->  temprament = $request->temprament ;
+             $file ->  gender = $request->gender;
+             $file ->  size = $request->size;
+             $file ->  description = $request->description;
+            $file->save();
+
+            
+             
+
+      
+   
     }
 
     /**
