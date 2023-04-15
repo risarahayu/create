@@ -5,6 +5,9 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\StrayDog;
+use App\Contact_dog;
+use App\Add_contact;
 
 class User extends Authenticatable
 {
@@ -36,4 +39,24 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function StrayDog()
+    {
+
+        return $this->hasMany(StrayDog::class);
+    }
+
+    public function Add_contact()
+    {
+
+        return $this->hasOne(Add_contact::class);
+    }
+    public function Contact_dog()
+    {
+        return $this->hasMany(Contact_dog::class);
+    }
+    public function StrayDog_User()
+    {
+        return $this->belongstoMany(StrayDog::class);
+    }
 }

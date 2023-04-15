@@ -1,9 +1,16 @@
-@extends('layouts.app')
+@extends('layouts.app_grid')
+@section('head')
 
-@section('content')
-<div class="container">
+@endsection
+@section('col-1')
+
+    <img src="{{asset('storage/logo/MP_Logo AW Official-03 1.svg')}}" alt="" class="img-fluid">
+
+@endsection
+@section('col-2')
+<!-- <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-8"> -->
             <div class="card">
                 <div class="card-header">{{ __('Register') }}</div>
 
@@ -62,16 +69,24 @@
                         </div>
 
                         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                            <div class="col-md-2 offset-md-4">
+                                <button type="submit" class="btn btn-background">
                                     {{ __('Register') }}
                                 </button>
+                            </div>
+                            <div class="col-md-5">
+                                @if (Route::has('login'))
+                                <a class="btn btn-link" href="{{ route('login') }}">
+                               
+                                {{ __('Already Have Account') }}
+                                </a>
+                                @endif
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
-        </div>
+        <!-- </div>
     </div>
-</div>
+</div> -->
 @endsection

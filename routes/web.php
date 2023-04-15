@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,4 +22,10 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/form', 'StrayDogController@index');
-Route::post('store', 'StrayDogController@store');
+Route::post('store', 'StrayDogController@store')->middleware(['auth']);
+Route::get('/view', 'StrayDogController@viewList')->middleware(['auth']);
+Route::get('/show', 'StrayDogController@show')->name('show');
+Route::get('/detail/{id}','StrayDogController@detail')->name('detail')->middleware(['auth']);;
+Route::get('/straydog/search', 'StrayDogController@search');
+Route::post('/straydog/request', 'StrayDogController@contact');
+Route::get('/admin/dashboard', 'StrayDogController@adminDashboard');

@@ -25,27 +25,32 @@
     
 
     <style>
-    .btn-background{
+        .btn-background{
         background: #BD1A8D;
         color:white;
        
     }
-
-
-    .btn-background:hover{
-        background: #A11A79;
-        color:white;
-
+    .page-item.active .page-link{
+        background-color: #BD1A8D;
+        border-color: white;
     }
-    label{
-        text-align:left;
+    .pagination > li > a,
+    .pagination > li > span {
+        color: #BD1A8D; // use your own color here
     }
-    nav-link:hover{
-        color:#FAFAFA;
 
+    .pagination > .active > a,
+    .pagination > .active > a:focus,
+    .pagination > .active > a:hover,
+    .pagination > .active > span,
+    .pagination > .active > span:focus,
+    .pagination > .active > span:hover {
+        background-color: #BD1A8D;
+        border-color: #BD1A8D;
     }
-    </style>
+        </style>
 
+   
 </head>
 <body>
     <div id="app" >
@@ -132,25 +137,7 @@
                 </div>
             </div>
         </nav>
-
-        <!-- <main class="py-4">
-            @yield('content')
-        </main> -->
-        
-        <div class="container-fluid text-center">
-        <div class="row align-items-start" style="height:100vh;">
-            <div class="col-12 col-md-6">
-                @yield('col-1')
-            </div>
-            <div class="col">
-            <main class="py-4">
-                @yield('col-2')
-            </main>
-            </div>
-        </div>
-        </div>
-    </div>
-    <div class="row">
+        <div class="row p-2">
         @yield('row')
     </div>
 </body>

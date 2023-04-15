@@ -4,6 +4,12 @@ namespace App\Http\Controllers;
 
 use App\StrayDog;
 use App\gender;
+use App\User;
+use App\Add_contact;
+use App\Contact_dog;
+use DB;
+use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Http\Request;
 
 class StrayDogController extends Controller
@@ -37,6 +43,10 @@ class StrayDogController extends Controller
      */
     public function store(Request $request)
     {
+
+        $request->validate([
+            'image' => 'required|max:2048'
+        ]);
         // dd($request->file('image'));
         // $request->file('image')->store('dog-image');
         // StrayDog::create($request->all());
@@ -50,19 +60,36 @@ class StrayDogController extends Controller
             //  $data ->  size = $request->size;
             //  $data ->  description = $request->description;
             //  $data -> save();
-
+            
 
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 foreach ($image as $files) {
                     // $destinationPath = 'public/storage/dog-image';
+// $name = $files->getClientOriginalName();
+// $files->move(public_path().'/image/', $name);
+// $data[]= $name;
+                    // $files->resize(100, 100, function ($constraint) {
+                    //     $constraint->aspectRatio();
+                    // });
                     $destinationPath = $files -> store('dog-image');
-                    $file_name = time() . "." . $files->getClientOriginalExtension();
-                    $files->move($destinationPath, $file_name);
+                    // dd($files->getClientOriginalName());
+                    $file_name = $files->hashName();
+                    
+                    // $file_name = $files->getClientOriginalName();
+                    // $files->move($destinationPath, $file_name);
+                    // dd($files->hashName())
+                    ;
                     $data[] = $file_name;
+
+                    
                 }
-            }
+            
+           
+                
             $file= new StrayDog();
+          
+           
             $file->image=json_encode($data);
              $file ->  animalType = $request->animalType;
              $file ->  color = $request->color;
@@ -70,13 +97,18 @@ class StrayDogController extends Controller
              $file ->  gender = $request->gender;
              $file ->  size = $request->size;
              $file ->  description = $request->description;
+             $file-> user_id = Auth::user()->id;
             $file->save();
-
+            // dd($file->id);
             
+            
+            return view ('Show', compact('file'));
+            // return redirect()->route('show', compact('file'));
              
-
-      
-   
+            }
+            else{
+                return "eh ga bisa";
+            }
     }
 
     /**
@@ -85,9 +117,12 @@ class StrayDogController extends Controller
      * @param  \App\StrayDog  $strayDog
      * @return \Illuminate\Http\Response
      */
-    public function show(StrayDog $strayDog)
+    public function viewList(StrayDog $strayDog)
     {
-        //
+        $file=StrayDog::all();
+        
+        
+        return view ('DogList', compact('file'));
     }
 
     /**
@@ -110,7 +145,7 @@ class StrayDogController extends Controller
      */
     public function update(Request $request, StrayDog $strayDog)
     {
-        //
+       
     }
 
     /**
@@ -123,5 +158,78 @@ class StrayDogController extends Controller
     {
         //
     }
+    public function show(StrayDog $strayDog)
+    {
+     return view ('DogList');   
+    }
+    public function detail($id)
+    {
+
+        $id_user =  Auth::user()->id;
+        $file= StrayDog::findOrFail($id);
+        // $isi = Contact_dog::all('straydog_id');
+        $chek  = StrayDog::find($id);
+        $contact_dog= $chek->Contact_dog;
+
+        // dd($contact_dog);
+
+        
+
+      
+      
+        return view ('Detail',compact('file','contact_dog'));   
+
+        
+    }
+
+    public function search(Request $request){
+        // menangkap data pencarian
+        $search = $request->search;
+        
+        // mengambil data dari table pegawai sesuai pencarian data
+        $file = DB::table('straydogs')
+        ->where('size','like',"%".$search."%")
+        ->paginate();
+
+        // mengirim data pegawai ke view index
+        return view('Doglist',['file' => $file]);
+    }
+  
+    public function Contact(Request $request){
+        // dd($request);
+        $this->validate($request,[
+    		'whatsapp' => 'required',
+    		'instagram' => 'required'
+    	]);
+        $data= $request->all();
+        $data['user_id']=Auth::user()->id;
+
+        $dataContactDog ['straydog_id']= $request->straydog_id;
+        $dataContactDog['user_id']=Auth::user()->id;
+        Add_contact::create($data);
+        Contact_dog::create($dataContactDog);
+       
+    }
     
+    public function adminDashboard(){
+
+        $yang =  Auth::user()->id;
+        // $chek  = Contact_dog::all();
+        $chek  = Contact_dog::select('user_id')->get();
+        // dd( $chek->pluck('user_id'));
+ 
+        $count = $chek->where('user_id', $yang)->count();
+        // dd($count);
+        $file= Contact_dog::where('user_id', $yang)->with('StrayDog')->get();
+        // dd($file);
+
+
+        $chek_dog  = StrayDog::select('user_id')->get();
+        // dd( $chek->pluck('user_id'));
+        $count_post = $chek_dog->where('user_id', $yang)->count();
+        // dd($count);
+        $file_post= StrayDog::where('user_id', $yang)->paginate(6);
+        // dd($file_post);
+        return view('admin_dashboard', compact('count', 'count_post', 'file', 'file_post'));
+    }
 }
