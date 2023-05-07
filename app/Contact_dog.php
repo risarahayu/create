@@ -15,9 +15,11 @@ class Contact_dog extends Model
     public function User()
     {
         return $this->belongstoMany(User::class,'contact_dog','user_id', 'straydog_id');
+        // return $this->belongstoMany(User::class,'user_id');
     }
     public function StrayDog()
     {
         return $this->belongsto(StrayDog::class,'straydog_id', 'id');
+        // return $this->belongsto(StrayDog::class,'straydog_id');
     }
 }

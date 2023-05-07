@@ -18,16 +18,10 @@ class StrayDog extends Model
     }
     public function User()
     {
-
         return $this->belongsto(User::class);
     }
     public function Contact_dog()
     {
-
         return $this->hasMany(Contact_dog::class, 'straydog_id');
-    }
-    public function StrayDog_User()
-    {
-        return $this->belongstoMany(User::class);
     }
 }

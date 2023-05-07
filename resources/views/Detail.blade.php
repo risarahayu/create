@@ -84,11 +84,13 @@
   
     <div class="text-left  border-top pt-3 mt-3">
         <h6>Photo(s)</h6>
+    
     @foreach(json_decode($file->image) as $gambar)
     
         <img src="{{asset('storage/dog-image/'. $gambar)}}" class="rounded" alt="..." style="max-height: 200px;">
     
     @endforeach
+   
     </div>
     
             <!-- <div class="col "> -->
@@ -110,22 +112,21 @@
 @section('col-2')
 <img src="{{asset('storage/logo/Group 28.svg')}}" alt="" class="img-fluid justify-content-center" style="max-height:70vh;">
 <br>
-
-<h5 class="mt-4">We will chat you soon!</h5>
-
-
-@if($contact_dog->count())
-<h5 class="mt-4 btn btn-background">You already request this dog</h5>
-@else
-<form action="/straydog/request" method="Post" class="d-flex" >
-@csrf
+@if(Auth::user()->role=='2')
+    <h5 class="mt-4">We will chat you soon!</h5>
+    @if($contact_dog->count()>0)
+    <h5 class="mt-4 btn btn-background">You already request this dog</h5>
+    @else
+    <form action="/straydog/request" method="Post" class="d-flex" >
+            @csrf
             <input class="form-control me-2" type="text" name="whatsapp" placeholder="enter phone number  ..">
             <input class="form-control me-2" type="text" name="instagram" placeholder="enter instagram ..">
             <input class="form-control me-2" type="text" style="display:none;" value="{{$file->id}}" name="straydog_id" placeholder="enter instagram .." >
             <button type="submit" class="btn btn-background">
                                     {{ __('Submit') }}
             </button>
-</form>
+    </form>
+@endif
 @endif
 
 
@@ -136,6 +137,45 @@
 </div> -->
 
 </div>
+
+@if(Auth::user()->role=='1')
+<div class="container mb-5 " style="max-width:90%;">
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Whatsapp</th>
+      <th scope="col">instagram</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach($RequesterData as $Requester)
+    <tr>
+        <td>
+            {{$Requester->name}}
+        </td>
+        <td>
+            {{$Requester->email}}
+        </td>
+        <td>
+            {{$Requester->Add_contact->whatsapp}}
+        </td>    
+        <td>
+            {{$Requester->Add_contact->instagram}}
+        </td>  
+        <td>
+            <a href="" class=" btn btn-background">Approve</a>
+            <a href="" class=" btn btn-background">Decline</a>
+        </td>  
+    </tr>
+    @endforeach
+  </tbody>
+</table>
+</div>
+
+@endif
 
 
 

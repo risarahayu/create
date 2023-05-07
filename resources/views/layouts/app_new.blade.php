@@ -38,6 +38,11 @@
     .pagination > li > span {
         color: #BD1A8D; // use your own color here
     }
+    .page-link:hover {
+        background-color: #BD1A8D;
+        color:white;
+    }
+   
 
     .pagination > .active > a,
     .pagination > .active > a:focus,
@@ -137,8 +142,9 @@
                 </div>
             </div>
         </nav>
-        <div class="row p-2">
-        @yield('row')
+        <div class="row justify-content-center mt-5">
+            @yield('row')
+        </div>
     </div>
 </body>
 </html>

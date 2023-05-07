@@ -2,7 +2,7 @@
 
 
 @section('row')
-<div class="row">
+
 <div class="d-flex flex-row mb-3 justify-content-center">
   <div class="p-5">
   <div class="card mb-3" style="max-width: 540px;">
@@ -37,73 +37,46 @@
 </div>
   </div>
 </div>
-</div>
 
-
-<div class="row justify-content-xl-left justify-content-md-cebter">
-      <!-- <div class="col-12"> -->
-  
-    <h3 class="text-center">Dog you Post</h3>
-      @foreach($file_post as $files)
-        @foreach(json_decode($files->image) as $gambar)
-        <div class="card m-3" style="max-width: 360px;">
-          <div class="row g-0 align-items-center">
-            <div class="col-md-4">
-                <img src="{{asset('storage/dog-image/'. $gambar)}}" class="img-fluid rounded-start ml-4" alt="...">
-            </div>
-            <div class="col-md-8">
-              <div class="card-body">
-                    <div class="row">
-                      <div class="col-md-12">
-                            <div class="row">
-                              <div class="col-3">
-                                  <img src="{{asset('storage/logo/cil_animal (1).svg')}}" alt="" class="img-fluid">
-                              </div>
-                              <div class="col-9 text-left">
-                                  Size
-                                  <br>
-                                  {{($files->size)}}
-                              </div>
-                          </div>
-                      </div>
-              </div>
-          <!--  -->
-           <!--  -->
-           <div class="row">
-                <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-3">
-                            <img src="{{asset('storage/logo/bi_gender-ambiguous.svg')}}" alt="" class="img-fluid">
-                        </div>
-                        <div class="col-9 text-left">
-                            Gender
-                            <br>
-                            {{($files->gender)}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--  -->
-            <div class="row">
-                <div class="col">
-                <a href="{{route('detail',$files->id)}}" class=" btn btn-background">See Details</a>
-                </div>
-            </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        @endforeach
+<div class="container mb-5 " style="max-width:90%;">
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Foto</th>
+      <th scope="col">Animal Type</th>
+      <th scope="col">Color(s)</th>
+      <th scope="col">Size</th>
+      <th scope="col">Requester</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+      @foreach($requester as $files)
+      @if($files["image"]!='')
+      <tr>
+        <td>
+          @foreach(json_decode($files["image"]) as $gambar)
+            <img src="{{asset('storage/dog-image/'. $gambar)}}" class="img-fluid rounded-start ml-4" style="height:70px;" alt="...">
+          @endforeach
+        </td>
+        <td>
+          {{($files["animalType"])}}
+        </td>
+        <td>
+          {{($files["gender"])}}
+        </td>
+        <td>
+          {{$files["size"]}}
+        </td>
+        <td>
+          {{$files["count_user"]}}
+        </td>
+        <td>
+          <a href="{{route('detail',$files->id)}}" class=" btn btn-background">See Details</a>
+        </td>
+      </tr>
+      @Endif
       @endforeach
-
-      <div class="row justify-content-center">
-          <div class="col-4">
-          {{ $file_post->links() }}
-          </div>
-      </div>
-     
-     
-  <!-- </div> -->
-  <div class="col-12"></div>
-</div>
+  </tbody>
+</table>
 @endsection

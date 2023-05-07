@@ -83,6 +83,16 @@
                                 @endif
                             </div>
                         </div>
+
+                        <div class="form-group row">
+                           
+
+                            
+                                <input id="role" type="text" class="form-control" name="role"   >
+
+                               
+                            
+                        </div>
                     </form>
                 </div>
             </div>

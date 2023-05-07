@@ -8,6 +8,8 @@ use Illuminate\Notifications\Notifiable;
 use App\StrayDog;
 use App\Contact_dog;
 use App\Add_contact;
+use App\Role;
+
 
 class User extends Authenticatable
 {
@@ -19,7 +21,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','role',
     ];
 
     /**
@@ -55,8 +57,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Contact_dog::class);
     }
-    public function StrayDog_User()
+    public function Role()
     {
-        return $this->belongstoMany(StrayDog::class);
+        return $this->belongsto(Role::class);
     }
 }

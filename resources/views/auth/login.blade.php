@@ -1,34 +1,7 @@
 @extends('layouts.app_grid')
 
 @section('head')
-<style>
-    body{
-        background: #BD1A8D;
-    }
-    .btn-background{
-        background: #BD1A8D;
-        color:white;
-       
-    }
-    .btn-background:hover{
-        background: #A11A79;
-        color:white;
 
-    }
-    .btn-line{
-        border-color:#BD1A8D;
-        color:#BD1A8D;
-       
-    }
-    .btn-line:hover{
-        background: #A11A79;
-        color:white;
-
-    }
-    label{
-        text-align:left;
-    }
-</style>
 @endsection
 @section('col-1')
 

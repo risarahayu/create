@@ -18,8 +18,8 @@
 
 
 @foreach($file as $files)
-@if($files->image!='')
-@foreach(json_decode($files->image) as $gambar)
+@if($files->StrayDog->image!='')
+@foreach(json_decode($files->StrayDog->image) as $gambar)
 
 <div class="card m-3" style="max-width: 360px;">  
 
@@ -40,7 +40,7 @@
                     <div class="col-9 text-left">
                         Size
                         <br>
-                        {{($files->size)}}
+                        {{($files->StrayDog->size)}}
                     </div>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                         <div class="col-9 text-left">
                             Gender
                             <br>
-                            {{($files->gender)}}
+                            {{($files->StrayDog->gender)}}
                         </div>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
             <!--  -->
             <div class="row">
                 <div class="col">
-                <a href="{{route('detail',$files->id)}}" class=" btn btn-background">See Details</a>
+                <a href="{{route('detail',$files->StrayDog->id)}}" class=" btn btn-background">See Details</a>
                 </div>
             </div>
       </div>

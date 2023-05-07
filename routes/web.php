@@ -26,6 +26,16 @@ Route::post('store', 'StrayDogController@store')->middleware(['auth']);
 Route::get('/view', 'StrayDogController@viewList')->middleware(['auth']);
 Route::get('/show', 'StrayDogController@show')->name('show');
 Route::get('/detail/{id}','StrayDogController@detail')->name('detail')->middleware(['auth']);;
-Route::get('/straydog/search', 'StrayDogController@search');
+Route::get('/straydog/search/all', 'StrayDogController@search');
 Route::post('/straydog/request', 'StrayDogController@contact');
+Route::get('/user/dashboard', 'StrayDogController@userDashboard');
+Route::get('/straydog/search/{id}', 'StrayDogController@searchMine')->name('search');
+Route::get('/straydog/search/post/{id}', 'StrayDogController@searchPost')->name('searchPost');
+
 Route::get('/admin/dashboard', 'StrayDogController@adminDashboard');
+Route::get('/sendAlert', 'StrayDogController@sendAlert');
+Route::get('/finishRescue', 'StrayDogController@finishRescue');
+
+Route::get('/vetForm', 'VetController@form');
+Route::post('storeVet', 'VetController@store');
+Route::get('listVet', 'VetController@list');

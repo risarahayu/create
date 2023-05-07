@@ -120,6 +120,7 @@ class StrayDogController extends Controller
     public function viewList(StrayDog $strayDog)
     {
         $file=StrayDog::all();
+       
         
         
         return view ('DogList', compact('file'));
@@ -168,16 +169,44 @@ class StrayDogController extends Controller
         $id_user =  Auth::user()->id;
         $file= StrayDog::findOrFail($id);
         // $isi = Contact_dog::all('straydog_id');
-        $chek  = StrayDog::find($id);
+        $chek  = StrayDog:: with(['Contact_dog' => function($contact_dog)use($id_user) {
+            $contact_dog->where('user_id', $id_user);
+            }])->find($id);
         $contact_dog= $chek->Contact_dog;
 
+        // dd($chek);
+
+        // dd($contact_dog[0]->user_id);
         // dd($contact_dog);
+        $user_id =[];
+        $user_name =[];
+        
+        // untuk admin
+        // $chek_all  = StrayDog:: with(['Contact_dog'])->find($id);
+        $chek_all = StrayDog::with(['Contact_dog', 'Contact_dog.User'])->find($id);
+        // $user = $chek_all->Contact_dog->User;
+        $contact_dog_all= $chek_all->Contact_dog;
+        
+        
+        foreach( $contact_dog_all as $requester){
+              $user_id[]=$requester['user_id'];
+              
+        }
+      $RequesterData=User::whereIn('id', $user_id)->get();
+
+    //   $name=[''];
+    //   foreach($a as $b){
+    //    $name= $b->name;
+    // }
+        // dd($name);
+       
+
 
         
 
       
       
-        return view ('Detail',compact('file','contact_dog'));   
+        return view ('Detail',compact('file','contact_dog','RequesterData'));   
 
         
     }
@@ -193,6 +222,48 @@ class StrayDogController extends Controller
 
         // mengirim data pegawai ke view index
         return view('Doglist',['file' => $file]);
+    }
+    public function searchPost(Request $request){
+        // menangkap data pencarian
+        $yang =  Auth::user()->id;
+        $search = $request->search;
+        $file= StrayDog::where('user_id', $yang)
+        ->where('size','like',"%".$search."%")
+        ->paginate();
+       
+        
+       
+       
+
+        // mengirim data pegawai ke view index
+        return view('Doglist',['file' => $file]);
+    }
+    public function searchMine(Request $request){
+         
+     
+        // menangkap data pencarian
+        $search = $request->search;
+        $yang =  Auth::user()->id;
+        
+        // mengambil data dari table pegawai sesuai pencarian data
+        // $file = Contact_dog::where('user_id', $yang)
+        // ->with('StrayDog')
+        // ->where('size','like',"%".$search."%")
+        // ->paginate();
+
+        $file = Contact_dog::whereHas('StrayDog', function ($query) use ($search){
+            $query->where('size', 'like', '%'.$search.'%');
+        })
+        ->with(['StrayDog' => function($query) use ($search){
+            $query->where('size', 'like', '%'.$search.'%');
+        }])->get();
+
+        // dd($file);
+
+        
+
+        // mengirim data pegawai ke view index
+        return view('My_dog',['file' => $file]);
     }
   
     public function Contact(Request $request){
@@ -211,17 +282,21 @@ class StrayDogController extends Controller
        
     }
     
-    public function adminDashboard(){
+    public function userDashboard(){
 
         $yang =  Auth::user()->id;
+      
         // $chek  = Contact_dog::all();
         $chek  = Contact_dog::select('user_id')->get();
         // dd( $chek->pluck('user_id'));
  
         $count = $chek->where('user_id', $yang)->count();
         // dd($count);
-        $file= Contact_dog::where('user_id', $yang)->with('StrayDog')->get();
-        // dd($file);
+        // $file= Contact_dog::where('user_id', $yang)->with('StrayDog')->paginate(6);
+        // $file= Contact_dog::where('user_id', $yang)->get();
+        $file= Contact_dog::where('user_id', $yang)->with('StrayDog')->paginate();
+        // $file= Contact_dog::with('user')->with('StrayDog')->get();
+
 
 
         $chek_dog  = StrayDog::select('user_id')->get();
@@ -230,6 +305,37 @@ class StrayDogController extends Controller
         // dd($count);
         $file_post= StrayDog::where('user_id', $yang)->paginate(6);
         // dd($file_post);
-        return view('admin_dashboard', compact('count', 'count_post', 'file', 'file_post'));
+        return view('user_dashboard', compact('count', 'count_post', 'file', 'file_post'));
+    }
+
+    public function adminDashboard(){
+        $count = StrayDog :: all()->count();
+        $dog = Contact_dog :: all('straydog_id');
+        $count_post = Contact_dog :: all()->count();
+        $file_post= StrayDog::paginate(6);
+        $file= Contact_dog::with('StrayDog')->paginate(6);
+        // $requester = StrayDog::with('Contact_dog')->get();
+        
+        $requester;
+        StrayDog::with('Contact_dog')->paginate(10)
+        ->map(function ($item,$index) use(&$requester) {
+             $requester[$index] = $item;
+             $requester[$index]['count_user'] = count($item->Contact_dog);
+             return $requester;
+            });
+
+            
+
+        // dd($requester[63]);
+        return view('admin_dashboard', compact('count', 'count_post', 'file_post', 'file','requester'));
+    }
+
+    public function sendAlert(){
+        return view('sendAlert');
+    }
+
+    public function finishRescue(){
+        return view('finishRescue');
+
     }
 }
